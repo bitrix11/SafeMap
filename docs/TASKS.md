@@ -9,7 +9,8 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
 - [x] Conectar remoto GitHub (`bitrix11/SafeMap`) y push de `main`.
 - [x] Definir convención de ramas (`feature/*`) y flujo de PR. — ver `AI_TEAM.md`
 - [ ] Proteger `main` en GitHub (requerir PR + 1 revisión). — 👤 tú · web GitHub
-- [ ] Definir categorías/severidad definitivas (desbloquea casi todo). — 👤 tú
+- [x] Definir categorías/severidad definitivas (v1: zona_oscura, robo,
+      sospechoso). — ver `DECISIONS.md`
 
 ## Frontend
 > Orden recomendado: el refactor modular va PRIMERO; el resto parte de esa base.

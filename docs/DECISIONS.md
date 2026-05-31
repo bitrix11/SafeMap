@@ -49,6 +49,20 @@ sin control. A gran escala, particionar por tiempo y `DROP PARTITION`.
 + índice GIST es muy eficiente y evita saturar al cliente (`LIMIT 500`).
 El radio se reserva para "reportes cerca de mí".
 
+## 2026-05-31 — Categorías definitivas (v1): 3 tipos — aceptada
+
+**Decisión:** las categorías v1 son `zona_oscura`, `robo`, `sospechoso`, con la
+severidad por defecto indicada en `DATA_MODEL.md`.
+**Razón:** cubren los casos núcleo del MVP sin sobrecargar el "reporte de un
+solo toque". Ampliaciones futuras se registran aquí antes de implementarse.
+
+## 2026-05-31 — Colaboración multi-IA: híbrido + PRs — aceptada
+
+**Decisión:** reparto híbrido (especialidad + rama por tarea); integración por
+Pull Requests a `main`; Claude Code como líder/integrador que revisa los PR.
+**Razón:** equilibra flexibilidad y control; evita colisiones y mantiene la
+trazabilidad. Detalle en `docs/AI_TEAM.md` y prompts en `docs/AI_PROMPTS.md`.
+
 ## 2026-05-31 — Control de versiones: Git + remoto GitHub — aceptada
 
 **Decisión:** repo Git inicializado en `main`; remoto en

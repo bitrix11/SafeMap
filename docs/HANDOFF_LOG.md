@@ -6,6 +6,28 @@
 
 ---
 
+## 2026-05-31 — Claude (Cowork) · Prompts y categorías v1
+
+### Cambios realizados
+- Nuevo `docs/AI_PROMPTS.md`: prompts de asignación listos para pegar, uno por
+  tarea, con rol, rama, alcance y reglas de cierre.
+- Categorías v1 confirmadas (zona_oscura, robo, sospechoso) → `DECISIONS.md`,
+  tarea marcada hecha en `TASKS.md`. Desbloquea backend y datos.
+
+### Archivos modificados
+- `docs/AI_PROMPTS.md` (nuevo), `docs/DECISIONS.md`, `docs/TASKS.md`,
+  `docs/HANDOFF_LOG.md`
+
+### Pendientes
+- Proteger `main` en GitHub (PR + 1 revisión).
+- Arrancar `feature/refactor-modular` (Claude Code) con su prompt.
+
+### Siguiente paso recomendado
+Pegar el prompt #1 (refactor modular) en Claude Code y, en paralelo, proteger
+`main` en GitHub.
+
+---
+
 ## 2026-05-31 — Claude (Cowork) · Equipo de IAs y reparto
 
 ### Cambios realizados
