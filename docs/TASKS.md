@@ -4,7 +4,8 @@ Pendientes actuales. Estados: `[ ]` pendiente · `[~]` en progreso · `[x]` hech
 Una IA por tarea / por rama.
 
 ## Infra y proceso
-- [ ] Inicializar Git y primer commit de la base de contexto.
+- [x] Inicializar Git y primer commit de la base de contexto.
+- [x] Conectar remoto GitHub (`bitrix11/SafeMap`) y push de `main`.
 - [ ] Definir convención de ramas (`feature/...`) y flujo de PR.
 
 ## Frontend

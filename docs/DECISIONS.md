@@ -49,6 +49,15 @@ sin control. A gran escala, particionar por tiempo y `DROP PARTITION`.
 + índice GIST es muy eficiente y evita saturar al cliente (`LIMIT 500`).
 El radio se reserva para "reportes cerca de mí".
 
+## 2026-05-31 — Control de versiones: Git + remoto GitHub — aceptada
+
+**Decisión:** repo Git inicializado en `main`; remoto en
+`https://github.com/bitrix11/SafeMap` (cuenta `bitrix11`).
+**Razón:** versionar la fuente única de verdad para coordinar varias IAs;
+commitear entre turnos para que la siguiente IA lea el repo actualizado.
+**Nota:** el push exige autenticarse como `bitrix11` (token/credencial),
+no como otras cuentas de GitHub que pudieran estar cacheadas en el equipo.
+
 ## 2026-05-31 — Privacidad: anonimato + ofuscación espacial — aceptada
 
 **Decisión:** sin `user_id` en `reportes`; `reporter_hash` rotado por ventana

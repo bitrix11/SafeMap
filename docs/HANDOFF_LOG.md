@@ -6,6 +6,32 @@
 
 ---
 
+## 2026-05-31 — Claude (Cowork) · Git + remoto
+
+### Cambios realizados
+- Se inicializó Git (rama `main`) y se hizo el primer commit de la base de
+  contexto (12 archivos, 646 inserciones).
+- Se conectó el remoto `https://github.com/bitrix11/SafeMap` y se subió `main`.
+- Se registró la decisión del remoto en `DECISIONS.md` y se marcaron las tareas
+  de infra correspondientes en `TASKS.md`.
+
+### Archivos modificados
+- `docs/DECISIONS.md`, `docs/TASKS.md`, `docs/HANDOFF_LOG.md`
+
+### Pruebas realizadas
+- `git push -u origin main` exitoso tras resolver credenciales (cuenta
+  `bitrix11`); rama remota creada.
+
+### Pendientes
+- Definir convención de ramas `feature/*` y flujo de PR.
+- Commitear estos cambios de docs y volver a hacer push.
+
+### Siguiente paso recomendado
+Arrancar la primera tarea de código en una rama `feature/*` (sugerido:
+`feature/refactor-modular` del frontend).
+
+---
+
 ## 2026-05-31 — Claude (Cowork)
 
 ### Cambios realizados
