@@ -1,0 +1,205 @@
+/* SafeMap — estilos base mobile-first, tema oscuro.
+   Variables centralizadas para que UX/Gemini ajusten sin tocar lógica. */
+
+:root {
+  --bg:           #0d1117;
+  --surface:      #161b22;
+  --surface-2:    #21262d;
+  --text:         #e6edf3;
+  --text-dim:     #8b949e;
+  --border:       #30363d;
+  --accent:       #2f81f7;
+
+  /* Colores de categoría (alineados con DATA_MODEL.md) */
+  --cat-zona_oscura: #FFB300;
+  --cat-robo:        #E53935;
+  --cat-sospechoso:  #8E24AA;
+
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+}
+
+/* Mapa a pantalla completa */
+#map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--bg);
+}
+
+/* Atribución Leaflet legible sobre oscuro */
+.leaflet-control-attribution {
+  background: rgba(13,17,23,.7) !important;
+  color: var(--text-dim) !important;
+}
+.leaflet-control-attribution a { color: var(--accent) !important; }
+
+/* Filtros superiores (placeholder estilizado) */
+.filtros {
+  position: absolute;
+  top: calc(12px + var(--safe-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 600;
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: rgba(22,27,34,.9);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  max-width: calc(100vw - 24px);
+  overflow-x: auto;
+}
+.filtros__btn {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  min-height: 36px;
+  cursor: pointer;
+  transition: opacity .15s, transform .1s;
+}
+.filtros__btn[aria-pressed="false"] { opacity: .4; }
+.filtros__btn:active { transform: scale(.96); }
+
+/* Botón reportar (pulgar) */
+.btn-reportar {
+  position: absolute;
+  right: 16px;
+  bottom: calc(96px + var(--safe-bottom));
+  z-index: 700;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0,0,0,.4);
+  cursor: pointer;
+  min-height: 52px;
+}
+.btn-reportar:active { transform: scale(.96); }
+
+/* Panel inferior (peek por defecto; feature/ui-bottom-sheet lo hará deslizable) */
+.panel {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 650;
+  max-height: 45vh;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  padding: 8px 16px calc(16px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -4px 24px rgba(0,0,0,.4);
+}
+.panel__handle {
+  width: 40px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 4px auto 8px;
+}
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.panel__title { font-size: 15px; margin: 0; font-weight: 600; }
+.panel__contador {
+  background: var(--surface-2);
+  color: var(--text-dim);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 13px;
+}
+
+.lista-reportes { list-style: none; margin: 0; padding: 0; overflow-y: auto; }
+.reporte {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.reporte__punto { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
+.reporte__info { flex: 1; min-width: 0; }
+.reporte__cat { font-size: 14px; font-weight: 600; }
+.reporte__meta { font-size: 12px; color: var(--text-dim); }
+.lista-reportes:empty::after,
+.lista-vacia {
+  content: "Sin reportes activos cerca";
+  color: var(--text-dim);
+  font-size: 13px;
+  padding: 16px 4px;
+  display: block;
+}
+
+/* Marcador de usuario (base; feature/geolocation-marker lo mejora) */
+.marcador-usuario {
+  width: 18px; height: 18px;
+  background: var(--accent);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(47,129,247,.4);
+}
+
+/* Modal de categoría */
+.modal {
+  position: absolute; inset: 0;
+  z-index: 900;
+  display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(0,0,0,.5);
+}
+.modal[hidden] { display: none; }
+.modal__contenido {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface);
+  border-radius: 16px 16px 0 0;
+  padding: 20px 16px calc(20px + var(--safe-bottom));
+}
+.modal__titulo { font-size: 17px; margin: 0 0 16px; }
+.modal__opciones { display: grid; gap: 10px; }
+.modal__opcion {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  min-height: 52px;
+}
+.modal__opcion:active { transform: scale(.98); }
+.modal__opcion .punto { width: 14px; height: 14px; border-radius: 50%; }
+.modal__cancelar {
+  width: 100%;
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+}

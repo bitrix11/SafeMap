@@ -14,21 +14,24 @@ App estática mobile-first servida como HTML/CSS/JS.
 - **UI:** filtros flotantes superiores por categoría + bottom sheet inferior
   deslizable (ver `UI_UX_GUIDELINES.md`).
 
-### Organización de código (objetivo)
+### Organización de código (implementada)
 
-El prototipo vive en un archivo único. Migración recomendada a:
+La base modular ya existe en el repo (vanilla JS, sin frameworks):
 
 ```
-index.html
-styles.css
-app.js          # arranque, estado global
-map.js          # init Leaflet, capas, clustering
-reports.js      # crear/leer/filtrar reportes, capa localStorage/API
-geolocation.js  # watchPosition, marcador de usuario
-ui.js           # bottom sheet, filtros, interacciones
+index.html      # estructura + carga de scripts en orden
+styles.css      # estilos mobile-first, tema oscuro, variables CSS
+config.js       # window.SafeMap.config: TTL, categorías v1, ajustes de mapa
+reports.js      # window.SafeMap.reports: CRUD localStorage + caducidad 2h
+map.js          # window.SafeMap.map: init Leaflet/CartoDB, marcadores, filtro
+geolocation.js  # window.SafeMap.geolocation: watchPosition + marcador usuario
+ui.js           # window.SafeMap.ui: filtros, lista, modal y reporte de un toque
+app.js          # arranque/orquestación de módulos
 ```
 
-Mantener vanilla JS (sin frameworks) salvo aprobación explícita.
+Cada módulo expone su API en `window.SafeMap.*` y deja ganchos para las tareas
+en curso (clustering, filtros avanzados, marcador dinámico, bottom sheet).
+Mantener vanilla JS salvo aprobación explícita.
 
 ## 2. Backend (diseñado, pendiente de implementar)
 

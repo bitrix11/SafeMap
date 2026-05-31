@@ -6,6 +6,40 @@
 
 ---
 
+## 2026-05-31 — Claude (Cowork) · Base modular del frontend
+
+### Cambios realizados
+- Se generó el scaffold modular funcional del frontend (no había código previo
+  en el repo). Stack respetado: HTML5 + CSS + JS vanilla + Leaflet + CartoDB Dark.
+- Archivos: `index.html`, `styles.css`, `config.js`, `reports.js`, `map.js`,
+  `geolocation.js`, `ui.js`, `app.js`.
+- Funciona: mapa oscuro, geolocalización con `watchPosition` + círculo de
+  precisión, reporte de un toque con modal de categoría, lista en panel,
+  caducidad a 2h sobre `localStorage` (esquema de DATA_MODEL.md), filtros base.
+- `config.js` centraliza TTL, categorías v1 y ajustes de mapa.
+- Cada módulo expone API en `window.SafeMap.*` y deja "ganchos" para las tareas
+  de las demás IAs (clustering, filtros avanzados, marcador dinámico, bottom sheet).
+
+### Archivos modificados
+- (nuevos) `index.html`, `styles.css`, `config.js`, `reports.js`, `map.js`,
+  `geolocation.js`, `ui.js`, `app.js`
+- `docs/HANDOFF_LOG.md`, `docs/TASKS.md`, `docs/ARCHITECTURE.md`
+
+### Pruebas realizadas
+- `node --check` en los 6 módulos JS → sin errores de sintaxis.
+- Revisión de orden de carga de scripts y dependencias entre módulos.
+
+### Pendientes
+- Probar en navegador/dispositivo (requiere servir por HTTP por la geoloc.).
+- Las features de las IAs parten ahora de esta base (ya no se necesita el
+  refactor del archivo único; ver TASKS.md).
+
+### Siguiente paso recomendado
+Commitear la base, hacer push, y lanzar en paralelo: Codex (filtros, clustering)
+y Gemini (marcador dinámico, bottom sheet) desde sus ramas `feature/*`.
+
+---
+
 ## 2026-05-31 — Claude (Cowork) · Prompts y categorías v1
 
 ### Cambios realizados

@@ -15,9 +15,9 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
 ## Frontend
 > Orden recomendado: el refactor modular va PRIMERO; el resto parte de esa base.
 
-- [ ] **Refactor modular**: separar el HTML único en `index.html`, `styles.css`,
-      `app.js`, `map.js`, `reports.js`, `geolocation.js`.
-      — 👤 Claude Code · 🌿 `feature/refactor-modular`
+- [x] **Base modular**: scaffold funcional generado desde cero (`index.html`,
+      `styles.css`, `config.js`, `reports.js`, `map.js`, `geolocation.js`,
+      `ui.js`, `app.js`). Las demás features parten de aquí. — Claude (Cowork)
 - [ ] Marcador de usuario dinámico (círculo de precisión + interpolación).
       — 👤 Gemini · 🌿 `feature/geolocation-marker` · 🔗 refactor-modular
 - [ ] Filtros superiores por categoría, con estado persistente.
