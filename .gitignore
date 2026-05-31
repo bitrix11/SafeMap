@@ -1,0 +1,28 @@
+# Dependencias
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Entorno / secretos
+.env
+.env.*
+*.local
+
+# Build / salidas
+dist/
+build/
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Específico de SafeMap (no versionar datos locales/dumps)
+*.sqlite
+*.dump
