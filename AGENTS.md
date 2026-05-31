@@ -56,6 +56,16 @@ Si surgen pendientes nuevos, agrégalos a `docs/TASKS.md`.
 
 ## Regla de coordinación multi-IA
 
-Una IA por rama o una IA por tarea. No edites en paralelo lo mismo sin Git.
-Commitea antes de pasar el trabajo a otra IA, para que la siguiente lea el repo
-actualizado.
+Entornos, roles y reparto de tareas están en `docs/AI_TEAM.md`. Léelo.
+
+- **Una IA por rama, una tarea por rama.** No edites en paralelo el mismo
+  archivo en dos ramas activas.
+- Ramas: `feature/<area>-<tarea>` (áreas: ui, map, ux, a11y, backend, refactor,
+  test, scaffold). `main` es estable y solo recibe cambios vía Pull Request.
+- Antes de empezar: `git pull` de `main` y crea tu rama desde ahí.
+- Al terminar: actualiza `HANDOFF_LOG.md` + `TASKS.md`, commit y push de tu
+  rama, y abre un PR a `main` describiendo qué cambió y cómo probar.
+- Claude Code es el integrador: revisa los PR contra `DECISIONS.md` antes del
+  merge. No mergees a `main` sin revisión.
+- Commits en español con prefijo: `feat:`, `fix:`, `docs:`, `refactor:`,
+  `chore:`.

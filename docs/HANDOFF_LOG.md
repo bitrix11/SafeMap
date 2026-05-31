@@ -6,6 +6,33 @@
 
 ---
 
+## 2026-05-31 — Claude (Cowork) · Equipo de IAs y reparto
+
+### Cambios realizados
+- Se definió el modelo de colaboración multi-IA: híbrido (especialidad + rama
+  por tarea), integración por Pull Requests, con Claude Code como líder/integrador.
+- Nuevo `docs/AI_TEAM.md`: roles, entornos por IA, convención de ramas, flujo de
+  trabajo por tarea, reglas anti-colisión y matriz de dominios.
+- `TASKS.md`: cada tarea ahora tiene dueño 👤, rama 🌿 y dependencias 🔗.
+- `AGENTS.md`: reglas de ramas/PR y rol integrador de Claude Code.
+
+### Archivos modificados
+- `docs/AI_TEAM.md` (nuevo), `docs/TASKS.md`, `AGENTS.md`, `docs/HANDOFF_LOG.md`
+
+### Pruebas realizadas
+- Revisión de coherencia entre AI_TEAM, TASKS y AGENTS (ramas y dueños alineados).
+
+### Pendientes
+- Proteger `main` en GitHub (requerir PR + 1 revisión).
+- Definir categorías/severidad definitivas (desbloquea varias tareas).
+- Commitear estos docs, push, y arrancar `feature/refactor-modular`.
+
+### Siguiente paso recomendado
+Claude Code toma `feature/refactor-modular` como primera tarea de código; el
+resto del frontend parte de esa base ya modularizada.
+
+---
+
 ## 2026-05-31 — Claude (Cowork) · Git + remoto
 
 ### Cambios realizados

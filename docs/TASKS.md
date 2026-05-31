@@ -1,37 +1,52 @@
 # SafeMap Tasks
 
 Pendientes actuales. Estados: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho.
-Una IA por tarea / por rama.
+**Una IA por tarea / por rama.** Reparto y entornos en `docs/AI_TEAM.md`.
+Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`.
 
 ## Infra y proceso
 - [x] Inicializar Git y primer commit de la base de contexto.
 - [x] Conectar remoto GitHub (`bitrix11/SafeMap`) y push de `main`.
-- [ ] Definir convención de ramas (`feature/...`) y flujo de PR.
+- [x] Definir convención de ramas (`feature/*`) y flujo de PR. — ver `AI_TEAM.md`
+- [ ] Proteger `main` en GitHub (requerir PR + 1 revisión). — 👤 tú · web GitHub
+- [ ] Definir categorías/severidad definitivas (desbloquea casi todo). — 👤 tú
 
 ## Frontend
-- [ ] Separar el archivo único en `index.html`, `styles.css`, `app.js`,
-      `map.js`, `reports.js`, `geolocation.js`. (rama `feature/refactor-modular`)
-- [ ] Marcador de usuario dinámico con círculo de precisión e interpolación.
-      (rama `feature/geolocation-marker`)
+> Orden recomendado: el refactor modular va PRIMERO; el resto parte de esa base.
+
+- [ ] **Refactor modular**: separar el HTML único en `index.html`, `styles.css`,
+      `app.js`, `map.js`, `reports.js`, `geolocation.js`.
+      — 👤 Claude Code · 🌿 `feature/refactor-modular`
+- [ ] Marcador de usuario dinámico (círculo de precisión + interpolación).
+      — 👤 Gemini · 🌿 `feature/geolocation-marker` · 🔗 refactor-modular
 - [ ] Filtros superiores por categoría, con estado persistente.
-      (rama `feature/report-filters`)
+      — 👤 Codex · 🌿 `feature/report-filters` · 🔗 refactor-modular
 - [ ] Clustering con Leaflet.markercluster.
-      (rama `feature/map-clustering`)
+      — 👤 Codex · 🌿 `feature/map-clustering` · 🔗 refactor-modular
 - [ ] Bottom sheet deslizable con safe areas iOS.
-      (rama `feature/ui-bottom-sheet`)
-- [ ] Probar en iOS Safari y Android Chrome físicos.
+      — 👤 Gemini · 🌿 `feature/ui-bottom-sheet` · 🔗 refactor-modular
+- [ ] Probar en iOS Safari y Android Chrome físicos. — 👤 tú + Antigravity (QA)
 
 ## Backend
 - [ ] Implementar esquema PostgreSQL + PostGIS (ver `DATA_MODEL.md`).
+      — 👤 Claude Code · 🌿 `feature/backend-schema`
 - [ ] `POST /api/reportes` con validación y anti-duplicado.
+      — 👤 Claude Code · 🌿 `feature/backend-post` · 🔗 backend-schema
 - [ ] `GET /api/reportes` por bbox + ofuscación espacial.
-- [ ] Caducidad: filtro lógico + purga `pg_cron`.
-- [ ] WebSocket `/ws/reportes` para tiempo real (futuro).
+      — 👤 Claude Code · 🌿 `feature/backend-get` · 🔗 backend-schema
+- [ ] Caducidad: filtro lógico + purga `pg_cron`. — 👤 Claude Code · 🔗 backend-schema
+- [ ] WebSocket `/ws/reportes` para tiempo real (futuro). — 👤 Claude Code
+
+## Pruebas
+- [ ] Suite de QA / pruebas manuales documentadas.
+      — 👤 Antigravity · 🌿 `feature/test-qa`
 
 ## Datos y privacidad
-- [ ] Confirmar categorías y severidad definitivas.
+- [ ] Confirmar categorías y severidad definitivas. — 👤 tú
 - [ ] Implementar `reporter_hash` rotado (HMAC) y rate-limiting.
+      — 👤 Claude Code · 🔗 backend-schema
 - [ ] Capa de migración para reportes existentes en `localStorage`.
+      — 👤 Codex · 🔗 refactor-modular
 
 ---
 
