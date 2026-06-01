@@ -20,7 +20,7 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
       `ui.js`, `app.js`). Las demás features parten de aquí. — Claude (Cowork)
 - [ ] Marcador de usuario dinámico (círculo de precisión + interpolación).
       — 👤 Gemini · 🌿 `feature/geolocation-marker` · 🔗 refactor-modular
-- [ ] Filtros superiores por categoría, con estado persistente.
+- [x] Filtros superiores por categoría, con estado persistente.
       — 👤 Codex · 🌿 `feature/report-filters` · 🔗 refactor-modular
 - [ ] Clustering con Leaflet.markercluster.
       — 👤 Codex · 🌿 `feature/map-clustering` · 🔗 refactor-modular
