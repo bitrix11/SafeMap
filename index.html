@@ -26,15 +26,20 @@
     + Reportar
   </button>
 
-  <!-- Panel inferior de reportes (placeholder: feature/ui-bottom-sheet lo hace deslizable) -->
-  <section id="panel" class="panel" aria-label="Reportes activos">
-    <div class="panel__handle" aria-hidden="true"></div>
-    <header class="panel__header">
-      <h1 class="panel__title">Reportes cercanos</h1>
-      <span id="panel-contador" class="panel__contador">0</span>
-    </header>
-    <ul id="lista-reportes" class="lista-reportes"></ul>
+  <!-- Panel inferior (Bottom Sheet deslizable) -->
+  <section id="panel" class="panel" data-state="peek" aria-label="Reportes activos">
+    <div class="panel__handle-container">
+      <div class="panel__handle" aria-hidden="true"></div>
+    </div>
+    <div class="panel__content">
+      <header class="panel__header">
+        <h1 class="panel__title">Reportes cercanos</h1>
+        <span id="panel-contador" class="panel__contador">0</span>
+      </header>
+      <ul id="lista-reportes" class="lista-reportes"></ul>
+    </div>
   </section>
+
 
   <!-- Selector de categoría al crear reporte -->
   <div id="modal-categoria" class="modal" hidden>

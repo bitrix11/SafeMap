@@ -96,31 +96,64 @@ html, body {
 }
 .btn-reportar:active { transform: scale(.96); }
 
-/* Panel inferior (peek por defecto; feature/ui-bottom-sheet lo hará deslizable) */
+/* Panel inferior (Bottom Sheet deslizable) */
 .panel {
-  position: absolute;
+  position: fixed;
   left: 0; right: 0; bottom: 0;
   z-index: 650;
-  max-height: 45vh;
+  height: 100vh;
   background: var(--surface);
   border-top: 1px solid var(--border);
   border-radius: 16px 16px 0 0;
-  padding: 8px 16px calc(16px + var(--safe-bottom));
   display: flex;
   flex-direction: column;
   box-shadow: 0 -4px 24px rgba(0,0,0,.4);
+  /* Posición inicial (colapsado) */
+  transform: translateY(calc(100vh - 80px - var(--safe-bottom)));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
+
+/* Estados controlados por JS (data-state) */
+.panel[data-state="peek"] {
+  transform: translateY(calc(100vh - 80px - var(--safe-bottom)));
+}
+.panel[data-state="half"] {
+  transform: translateY(55vh);
+}
+.panel[data-state="full"] {
+  transform: translateY(calc(20px + var(--safe-top)));
+}
+
+.panel__handle-container {
+  width: 100%;
+  padding: 8px 0;
+  cursor: grab;
+  flex: 0 0 auto;
+}
+.panel__handle-container:active { cursor: grabbing; }
+
 .panel__handle {
   width: 40px; height: 4px;
   background: var(--border);
   border-radius: 2px;
-  margin: 4px auto 8px;
+  margin: 0 auto;
 }
+
+.panel__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px calc(16px + var(--safe-bottom));
+  overflow: hidden;
+}
+
 .panel__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  flex: 0 0 auto;
 }
 .panel__title { font-size: 15px; margin: 0; font-weight: 600; }
 .panel__contador {
@@ -131,7 +164,7 @@ html, body {
   font-size: 13px;
 }
 
-.lista-reportes { list-style: none; margin: 0; padding: 0; overflow-y: auto; }
+.lista-reportes { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; }
 .reporte {
   display: flex;
   align-items: center;

@@ -6,6 +6,35 @@
 
 ---
 
+## 2026-05-31 — Gemini CLI · Bottom Sheet Deslizable (UX Móvil)
+
+### Cambios realizados
+- Se convirtió el panel de reportes en un Bottom Sheet interactivo y deslizable (Vanilla JS/CSS).
+- Tres estados implementados: `peek` (colapsado), `half` (medio), `full` (expandido).
+- Gestos táctiles nativos: arrastre fluido con `transform` y `transition` (cubic-bezier).
+- Lógica de "snapping" basada en posición y velocidad (swipe rápido).
+- Respeto de *safe areas* iOS (`env(safe-area-inset-bottom/top)`) mediante variables CSS.
+- Scroll interno en la lista de reportes compatible con el arrastre del sheet (solo arrastra si está en el tope de la lista).
+- Estructura HTML actualizada para separar el *handle* del contenido.
+
+### Archivos modificados
+- `index.html`, `styles.css`, `ui.js`, `docs/HANDOFF_LOG.md`, `docs/TASKS.md`
+
+### Pruebas realizadas
+- Verificación visual de los estados mediante edición de `data-state` en el inspector.
+- Simulación de eventos táctiles en el código para validar la lógica de snapping.
+- Validación de sintaxis JS y CSS.
+- *Nota:* Requiere dispositivo móvil físico o simulador de Chrome/Safari para probar gestos.
+
+### Pendientes
+- Ajustar los puntos de "snap" si se agregan más elementos a la cabecera del panel.
+- Probar con una lista muy larga de reportes para asegurar que el scroll inercial no interfiere con el cierre del sheet.
+
+### Siguiente paso recomendado
+Fusionar la rama `feature/ui-bottom-sheet` a `main` tras revisión. El siguiente paso de UX es el marcador dinámico (`feature/geolocation-marker`).
+
+---
+
 ## 2026-05-31 — Claude (Cowork) · Base modular del frontend
 
 ### Cambios realizados

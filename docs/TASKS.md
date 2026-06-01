@@ -24,7 +24,7 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
       — 👤 Codex · 🌿 `feature/report-filters` · 🔗 refactor-modular
 - [ ] Clustering con Leaflet.markercluster.
       — 👤 Codex · 🌿 `feature/map-clustering` · 🔗 refactor-modular
-- [ ] Bottom sheet deslizable con safe areas iOS.
+- [x] Bottom sheet deslizable con safe areas iOS.
       — 👤 Gemini · 🌿 `feature/ui-bottom-sheet` · 🔗 refactor-modular
 - [ ] Probar en iOS Safari y Android Chrome físicos. — 👤 tú + Antigravity (QA)
 

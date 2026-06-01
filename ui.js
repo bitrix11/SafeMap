@@ -1,6 +1,6 @@
 /* SafeMap — interacciones de interfaz.
-   Filtros de categoría, lista de reportes, modal de categoría y flujo de
-   "reporte de un toque". feature/ui-bottom-sheet ampliará el panel inferior. */
+   Bottom sheet deslizable, filtros de categoría, lista de reportes, modal de
+   categoría y flujo de "reporte de un toque". */
 
 (function () {
   const { config } = window.SafeMap;
@@ -9,7 +9,112 @@
     _renderFiltros();
     _renderLista();
     _bindReportar();
+    _initBottomSheet();
     document.addEventListener("safemap:reportes-cambio", _renderLista);
+  }
+
+  /* ---- Bottom Sheet (deslizable) ---- */
+  function _initBottomSheet() {
+    const panel = document.getElementById("panel");
+    const handle = panel.querySelector(".panel__handle-container");
+    const lista = document.getElementById("lista-reportes");
+
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
+
+    const states = { PEEK: "peek", HALF: "half", FULL: "full" };
+    let currentState = states.PEEK;
+
+    const getSnaps = () => {
+      const vh = window.innerHeight;
+      const safeBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--safe-bottom")) || 0;
+      const safeTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--safe-top")) || 0;
+      return {
+        [states.PEEK]: vh - 80 - safeBottom,
+        [states.HALF]: vh * 0.55,
+        [states.FULL]: 20 + safeTop,
+      };
+    };
+
+    function setPanelState(state, animate = true) {
+      currentState = state;
+      panel.dataset.state = state;
+      panel.style.transition = animate ? "" : "none";
+      panel.style.transform = ""; // el CSS aplica vía data-state
+    }
+
+    handle.addEventListener("touchstart", (e) => {
+      startY = e.touches[0].clientY;
+      isDragging = true;
+      panel.style.transition = "none";
+    }, { passive: true });
+
+    lista.addEventListener("touchstart", (e) => {
+      if (currentState !== states.FULL || lista.scrollTop <= 0) {
+        startY = e.touches[0].clientY;
+        if (currentState !== states.FULL) {
+          isDragging = true;
+          panel.style.transition = "none";
+        }
+      }
+    }, { passive: true });
+
+    window.addEventListener("touchmove", (e) => {
+      if (!isDragging && lista.scrollTop <= 0 && currentState === states.FULL) {
+        if (e.touches[0].clientY > startY) {
+          isDragging = true;
+          panel.style.transition = "none";
+        }
+      }
+      if (!isDragging) return;
+
+      currentY = e.touches[0].clientY;
+      const deltaY = currentY - startY;
+      const snaps = getSnaps();
+      const basePos = snaps[currentState];
+      let newPos = basePos + deltaY;
+
+      const topLimit = snaps[states.FULL];
+      const bottomLimit = snaps[states.PEEK] + 50;
+      if (newPos < topLimit) newPos = topLimit - Math.pow(topLimit - newPos, 0.7);
+      if (newPos > bottomLimit) newPos = bottomLimit;
+
+      panel.style.transform = `translateY(${newPos}px)`;
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+
+    window.addEventListener("touchend", (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      const deltaY = e.changedTouches[0].clientY - startY;
+      const velocity = deltaY;
+      const snaps = getSnaps();
+      const currentPos = snaps[currentState] + deltaY;
+
+      let targetState = currentState;
+      const snapValues = Object.entries(snaps);
+
+      if (Math.abs(velocity) > 20) {
+        if (velocity > 0) {
+          targetState = currentState === states.FULL ? states.HALF : states.PEEK;
+        } else {
+          targetState = currentState === states.PEEK ? states.HALF : states.FULL;
+        }
+      } else {
+        targetState = snapValues.reduce((prev, curr) =>
+          Math.abs(curr[1] - currentPos) < Math.abs(prev[1] - currentPos) ? curr : prev
+        )[0];
+      }
+
+      setPanelState(targetState);
+    });
+
+    // Toque en el handle alterna peek/half (accesible sin gesto)
+    handle.addEventListener("click", () => {
+      setPanelState(currentState === states.PEEK ? states.HALF : states.PEEK);
+    });
   }
 
   /* ---- Filtros de categoria ---- */
@@ -159,7 +264,6 @@
   }
 
   function _crearEnUbicacion(codigo) {
-    // Preferimos la posición GPS; si no, el centro del mapa.
     const pos = window.SafeMap.geolocation.getPosicion();
     let lat, lng;
     if (pos) { lat = pos.lat; lng = pos.lng; }
