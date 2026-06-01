@@ -13,46 +13,92 @@
     document.addEventListener("safemap:reportes-cambio", _renderLista);
   }
 
-  /* ---- Filtros (base; feature/report-filters lo enriquece) ---- */
+  /* ---- Filtros de categoria ---- */
   function _renderFiltros() {
     const cont = document.getElementById("filtros");
+    const guardadas = _leerFiltrosGuardados();
+    window.SafeMap.map.setCategoriasVisibles(guardadas);
     cont.innerHTML = "";
 
     const btnTodas = _btnFiltro("Todas", null);
-    btnTodas.setAttribute("aria-pressed", "true");
     cont.appendChild(btnTodas);
 
     config.CATEGORIAS.forEach((cat) => {
       cont.appendChild(_btnFiltro(cat.label, cat.codigo, cat.color));
     });
+
+    _actualizarEstadoFiltros();
   }
 
   function _btnFiltro(texto, codigo, color) {
     const b = document.createElement("button");
     b.className = "filtros__btn";
     b.textContent = texto;
-    b.setAttribute("aria-pressed", codigo === null ? "true" : "false");
-    if (color) b.style.borderColor = color;
+    b.type = "button";
+    b.dataset.categoria = codigo || "todas";
+    if (color) b.style.setProperty("--filter-color", color);
     b.addEventListener("click", () => {
-      document.querySelectorAll(".filtros__btn").forEach((x) =>
-        x.setAttribute("aria-pressed", "false")
-      );
-      b.setAttribute("aria-pressed", "true");
-      window.SafeMap.map.setFiltro(codigo);
+      const actuales = window.SafeMap.map.getCategoriasVisibles();
+      const todos = config.CATEGORIAS.map((cat) => cat.codigo);
+      let siguientes;
+
+      if (!codigo) {
+        siguientes = todos;
+      } else if (actuales.length === todos.length) {
+        siguientes = [codigo];
+      } else if (actuales.includes(codigo)) {
+        siguientes = actuales.filter((cat) => cat !== codigo);
+      } else {
+        siguientes = [...actuales, codigo];
+      }
+
+      if (siguientes.length === 0) siguientes = todos;
+      window.SafeMap.map.setCategoriasVisibles(siguientes);
+      _guardarFiltros(siguientes);
+      _actualizarEstadoFiltros();
       _renderLista();
     });
     return b;
+  }
+
+  function _leerFiltrosGuardados() {
+    const todos = config.CATEGORIAS.map((cat) => cat.codigo);
+    try {
+      const raw = localStorage.getItem(config.FILTERS_STORAGE_KEY);
+      if (!raw) return todos;
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data)) return todos;
+      const validas = data.filter((codigo) => todos.includes(codigo));
+      return validas.length ? [...new Set(validas)] : todos;
+    } catch (e) {
+      console.warn("SafeMap: filtros corruptos, usando todas las categorías.", e);
+      return todos;
+    }
+  }
+
+  function _guardarFiltros(codigos) {
+    localStorage.setItem(config.FILTERS_STORAGE_KEY, JSON.stringify(codigos));
+  }
+
+  function _actualizarEstadoFiltros() {
+    const visibles = window.SafeMap.map.getCategoriasVisibles();
+    const todosActivos = visibles.length === config.CATEGORIAS.length;
+    document.querySelectorAll(".filtros__btn").forEach((btn) => {
+      const codigo = btn.dataset.categoria;
+      const activo = codigo === "todas" ? todosActivos : visibles.includes(codigo);
+      btn.setAttribute("aria-pressed", activo ? "true" : "false");
+    });
   }
 
   /* ---- Lista de reportes en el panel ---- */
   function _renderLista() {
     const ul = document.getElementById("lista-reportes");
     const contador = document.getElementById("panel-contador");
-    const filtro = window.SafeMap.map.getFiltro();
+    const visibles = new Set(window.SafeMap.map.getCategoriasVisibles());
 
     const reportes = window.SafeMap.reports
       .listar()
-      .filter((r) => (filtro ? r.categoria === filtro : true))
+      .filter((r) => visibles.has(r.categoria))
       .sort((a, b) => new Date(b.creado_en) - new Date(a.creado_en));
 
     contador.textContent = String(reportes.length);

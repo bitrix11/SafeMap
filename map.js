@@ -1,13 +1,12 @@
 /* SafeMap — capa de mapa (Leaflet + CartoDB Dark).
-   Inicializa el mapa y dibuja los marcadores de reportes.
-   feature/map-clustering reemplazará la capa de marcadores por clustering.
-   feature/report-filters consumirá `setFiltro`. */
+   Inicializa el mapa, dibuja marcadores y aplica filtros de categoria.
+   feature/map-clustering reemplazará la capa de marcadores por clustering. */
 
 (function () {
   const { config } = window.SafeMap;
   let map = null;
   let capaReportes = null;
-  let filtroActivo = null; // null = todas; o un código de categoría
+  let categoriasVisibles = config.CATEGORIAS.map((cat) => cat.codigo);
 
   function init() {
     map = L.map("map", {
@@ -45,9 +44,10 @@
     if (!capaReportes) return;
     capaReportes.clearLayers();
 
-    const reportes = window.SafeMap.reports.listar().filter((r) =>
-      filtroActivo ? r.categoria === filtroActivo : true
-    );
+    const visibles = new Set(categoriasVisibles);
+    const reportes = window.SafeMap.reports
+      .listar()
+      .filter((r) => visibles.has(r.categoria));
 
     reportes.forEach((r) => {
       const meta = window.SafeMap.categoria(r.categoria);
@@ -61,6 +61,25 @@
     });
   }
 
+  function _normalizarCategorias(codigos) {
+    const permitidas = config.CATEGORIAS.map((cat) => cat.codigo);
+    const recibidas = Array.isArray(codigos) ? codigos : [codigos];
+    const filtradas = recibidas.filter((codigo) => permitidas.includes(codigo));
+    return [...new Set(filtradas)];
+  }
+
+  function setCategoriasVisibles(codigos) {
+    const siguientes = _normalizarCategorias(codigos);
+    categoriasVisibles = siguientes.length
+      ? siguientes
+      : config.CATEGORIAS.map((cat) => cat.codigo);
+    redibujar();
+  }
+
+  function getCategoriasVisibles() {
+    return [...categoriasVisibles];
+  }
+
   // API pública
   window.SafeMap.map = {
     init,
@@ -68,7 +87,14 @@
     getMap: () => map,
     getCentro: () => (map ? map.getCenter() : null),
     setVista: (lat, lng, zoom) => map && map.setView([lat, lng], zoom || map.getZoom()),
-    setFiltro: (codigo) => { filtroActivo = codigo; redibujar(); },
-    getFiltro: () => filtroActivo,
+    setCategoriasVisibles,
+    getCategoriasVisibles,
+    setFiltro: (codigo) => {
+      setCategoriasVisibles(codigo ? [codigo] : config.CATEGORIAS.map((cat) => cat.codigo));
+    },
+    getFiltro: () => {
+      if (categoriasVisibles.length === 1) return categoriasVisibles[0];
+      return null;
+    },
   };
 })();

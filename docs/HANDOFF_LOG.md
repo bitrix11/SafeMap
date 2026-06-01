@@ -6,6 +6,32 @@
 
 ---
 
+## 2026-05-31 — Codex · Filtros superiores persistentes
+
+### Cambios realizados
+- Se implementó el menú flotante superior de filtros por categoría con selección múltiple: todas, una sola categoría o combinaciones.
+- El estado visible se persiste en `localStorage` bajo `safemap.filtros.categorias`, separado de `safemap.reportes` para no romper el esquema de reportes.
+- `map.js` ahora filtra por conjunto de categorías visibles y conserva compatibilidad con `setFiltro/getFiltro`.
+- Se pulió la UI responsive del filtro sobre el mapa oscuro con indicadores de color por categoría y objetivos táctiles de 44 px.
+
+### Archivos modificados
+- `config.js`, `index.html`, `map.js`, `styles.css`, `ui.js`
+- `docs/HANDOFF_LOG.md`, `docs/TASKS.md`
+
+### Pruebas realizadas
+- `git diff --check` sin errores.
+- Servidor estático local en `http://127.0.0.1:4173/index.html` respondió `200`.
+- Intenté `node --check` y verificación con Browser integrado, pero el entorno bloqueó `node.exe` con "Acceso denegado" y el runtime del navegador integrado no inició.
+
+### Pendientes / riesgos
+- Validar interacción visual en navegador real móvil/escritorio: tocar una categoría desde "Todas" debe dejarla sola; tocar otras debe sumar combinación; tocar "Todas" restaura todo; recargar debe conservar selección.
+- Hay solape declarado con `map.js`: esta rama toca `redibujar` y la API de filtro; la rama `feature/map-clustering` debe conservar `getCategoriasVisibles/setCategoriasVisibles` al reemplazar la capa por clusters.
+
+### Siguiente paso recomendado
+Abrir PR a `main` y pedir revisión contra `DECISIONS.md`; después integrar clustering preservando el contrato de filtros.
+
+---
+
 ## 2026-05-31 — Claude (Cowork) · Base modular del frontend
 
 ### Cambios realizados
