@@ -6,6 +6,32 @@
 
 ---
 
+## 2026-06-01 — Gemini CLI · Marcador de usuario dinámico (UX/Geolocation)
+
+### Cambios realizados
+- Marcador de usuario dinámico estilo Waze/Google Maps.
+- Animación de pulso continuo (CSS animation) para mejor visibilidad sobre fondo oscuro.
+- Indicador direccional (flecha) que aparece automáticamente cuando hay rumbo (`heading`) disponible.
+- Interpolación suave (LERP) de latitud, longitud y precisión mediante `requestAnimationFrame` (60fps), eliminando saltos bruscos entre lecturas de GPS.
+- Refactor de `geolocation.js` para separar la lógica de obtención de datos de la lógica de suavizado y renderizado.
+
+### Archivos modificados
+- `styles.css`, `geolocation.js`, `docs/HANDOFF_LOG.md`, `docs/TASKS.md`
+
+### Pruebas realizadas
+- Verificación del bucle de animación e interpolación matemática.
+- Validación de los nuevos selectores CSS y animaciones.
+- Rotación del marcador mediante manipulación directa del DOM (`transform: rotate`) para máximo rendimiento.
+
+### Pendientes
+- Probar en dispositivo real en movimiento para validar la precisión del suavizado (factor `t=0.12`).
+- Evaluar cálculo de rumbo basado en vector de movimiento si el GPS no provee `heading` (común en navegadores de escritorio o estáticos).
+
+### Siguiente paso recomendado
+Fusionar `feature/geolocation-marker` a `main`. Continuar con la integración de clustering en `map.js`.
+
+---
+
 ## 2026-05-31 — Gemini CLI · Bottom Sheet Deslizable (UX Móvil)
 
 ### Cambios realizados

@@ -18,7 +18,7 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
 - [x] **Base modular**: scaffold funcional generado desde cero (`index.html`,
       `styles.css`, `config.js`, `reports.js`, `map.js`, `geolocation.js`,
       `ui.js`, `app.js`). Las demás features parten de aquí. — Claude (Cowork)
-- [ ] Marcador de usuario dinámico (círculo de precisión + interpolación).
+- [x] Marcador de usuario dinámico (círculo de precisión + interpolación).
       — 👤 Gemini · 🌿 `feature/geolocation-marker` · 🔗 refactor-modular
 - [ ] Filtros superiores por categoría, con estado persistente.
       — 👤 Codex · 🌿 `feature/report-filters` · 🔗 refactor-modular
