@@ -10,6 +10,7 @@ window.SafeMap.config = {
 
   // localStorage (no romper sin migración — ver DATA_MODEL.md)
   STORAGE_KEY: "safemap.reportes",
+  FILTERS_STORAGE_KEY: "safemap.filtros.categorias",
   SCHEMA_VERSION: 1,
 
   // Mapa
