@@ -45,7 +45,7 @@ html, body {
 }
 .leaflet-control-attribution a { color: var(--accent) !important; }
 
-/* Filtros superiores (placeholder estilizado) */
+/* Filtros superiores */
 .filtros {
   position: absolute;
   top: calc(12px + var(--safe-top));
@@ -55,26 +55,54 @@ html, body {
   display: flex;
   gap: 8px;
   padding: 6px;
-  background: rgba(22,27,34,.9);
+  background: rgba(13,17,23,.84);
   border: 1px solid var(--border);
   border-radius: 999px;
-  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   max-width: calc(100vw - 24px);
   overflow-x: auto;
+  scrollbar-width: none;
 }
+.filtros::-webkit-scrollbar { display: none; }
 .filtros__btn {
+  --filter-color: var(--accent);
+  position: relative;
   flex: 0 0 auto;
   border: 1px solid var(--border);
-  background: var(--surface-2);
+  background: rgba(33,38,45,.78);
   color: var(--text);
-  padding: 8px 14px;
+  padding: 9px 13px 9px 30px;
   border-radius: 999px;
   font-size: 13px;
-  min-height: 36px;
+  line-height: 1;
+  min-height: 44px;
   cursor: pointer;
-  transition: opacity .15s, transform .1s;
+  transition: background .15s, border-color .15s, box-shadow .15s, opacity .15s, transform .1s;
+  white-space: nowrap;
 }
-.filtros__btn[aria-pressed="false"] { opacity: .4; }
+.filtros__btn::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--filter-color);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.1);
+  transform: translateY(-50%);
+}
+.filtros__btn[data-categoria="todas"] { padding-left: 14px; }
+.filtros__btn[data-categoria="todas"]::before { display: none; }
+.filtros__btn[aria-pressed="true"] {
+  background: rgba(33,38,45,.96);
+  border-color: var(--filter-color);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.filtros__btn[aria-pressed="false"] { opacity: .55; filter: saturate(.8); }
+.filtros__btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .filtros__btn:active { transform: scale(.96); }
 
 /* Botón reportar (pulgar) */
