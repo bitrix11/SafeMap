@@ -1,7 +1,6 @@
 /* SafeMap — interacciones de interfaz.
-   Filtros (placeholder), lista de reportes, modal de categoría y flujo de
-   "reporte de un toque". feature/report-filters y feature/ui-bottom-sheet
-   ampliarán las partes marcadas. */
+   Filtros de categoría, lista de reportes, modal de categoría y flujo de
+   "reporte de un toque". feature/ui-bottom-sheet ampliará el panel inferior. */
 
 (function () {
   const { config } = window.SafeMap;
