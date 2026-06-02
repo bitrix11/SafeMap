@@ -49,6 +49,14 @@ sin control. A gran escala, particionar por tiempo y `DROP PARTITION`.
 + índice GIST es muy eficiente y evita saturar al cliente (`LIMIT 500`).
 El radio se reserva para "reportes cerca de mí".
 
+## 2026-06-01 — Conexión frontend↔backend con fallback — aceptada
+
+**Decisión:** `reports.js` usará el API (`/api/reportes`) como fuente primaria;
+si el backend no responde, cae a `localStorage`. Se añade `API_BASE` en
+`config.js` para apuntar a local o producción.
+**Razón:** la app funciona siempre (online u offline) y la transición desde el
+prototipo local es gradual, sin romper datos existentes.
+
 ## 2026-05-31 — Categorías definitivas (v1): 3 tipos — aceptada
 
 **Decisión:** las categorías v1 son `zona_oscura`, `robo`, `sospechoso`, con la

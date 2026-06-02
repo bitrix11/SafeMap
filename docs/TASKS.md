@@ -42,7 +42,12 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
 - [ ] Tests automáticos del backend (pytest + httpx). — 👤 Claude Code
 - [ ] WebSocket `/ws/reportes` para tiempo real (futuro). — 👤 Claude Code
 
-## Pruebas
+## Integración
+- [ ] Conectar `reports.js` al API (`/api/reportes`) con fallback a localStorage;
+      añadir `API_BASE` en `config.js`. — 👤 Claude Code · 🌿 `feature/conectar-api`
+      · ver `DECISIONS.md` (2026-06-01)
+
+## Pruebas (al final, con todo conectado)
 - [ ] Suite de QA / pruebas manuales documentadas.
       — 👤 Antigravity · 🌿 `feature/test-qa`
 
