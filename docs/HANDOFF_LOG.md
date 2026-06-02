@@ -204,6 +204,33 @@ y Gemini (marcador dinámico, bottom sheet) desde sus ramas `feature/*`.
 
 ---
 
+## 2026-06-01 — Claude Code + Claude (Cowork) · Frontend↔Backend conectado
+
+### Cambios realizados
+- `reports.js` ahora usa el API REST como fuente primaria (GET/POST a
+  `API_BASE + /api/reportes`) con fallback a localStorage si falla o si
+  API_BASE está vacío. `listar()` y `crear()` pasaron a async.
+- `config.js`: nuevo `API_BASE` ("http://localhost:8000").
+- `map.js` y `ui.js`: render async; `map.on("moveend")` recarga reportes del
+  bbox visible.
+- Backend: agregado `CORSMiddleware` en `main.py` para permitir llamadas desde
+  el frontend en otro puerto/origen.
+
+### Pruebas realizadas
+- App levantada con backend (Docker, :8000) + frontend (:5500). Tras habilitar
+  CORS y reconstruir la imagen, los errores desaparecieron y el frontend habla
+  con el API real (POST/GET verificados, ofuscación espacial y caducidad OK).
+
+### Pendientes
+- Restringir `allow_origins` de CORS en producción (hoy "*").
+- QA con Antigravity (siguiente).
+- Refinamientos backend en TASKS.md (rate-limiting, IP real, pg_cron, tests).
+
+### Siguiente paso recomendado
+QA de la app completa con Antigravity (bloque #7 de AI_PROMPTS.md).
+
+---
+
 ## 2026-05-31 — Claude (Cowork) · Prompts y categorías v1
 
 ### Cambios realizados

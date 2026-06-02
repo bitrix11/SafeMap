@@ -43,9 +43,9 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
 - [ ] WebSocket `/ws/reportes` para tiempo real (futuro). — 👤 Claude Code
 
 ## Integración
-- [ ] Conectar `reports.js` al API (`/api/reportes`) con fallback a localStorage;
-      añadir `API_BASE` en `config.js`. — 👤 Claude Code · 🌿 `feature/conectar-api`
-      · ver `DECISIONS.md` (2026-06-01)
+- [x] Conectar `reports.js` al API (`/api/reportes`) con fallback a localStorage;
+      `API_BASE` en `config.js`; CORS en backend. — Claude Code + Cowork
+- [ ] Restringir `allow_origins` de CORS para producción (hoy "*"). — 👤 Claude Code
 
 ## Pruebas (al final, con todo conectado)
 - [ ] Suite de QA / pruebas manuales documentadas.
