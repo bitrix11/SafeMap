@@ -6,6 +6,48 @@
 
 ---
 
+## 2026-06-01 — Claude Code · Backend: esquema PostgreSQL/PostGIS + endpoints
+
+### Cambios realizados
+- Creada carpeta `backend/` con stack completo: FastAPI + asyncpg + PostGIS.
+- `migrations/V001__schema_inicial.sql`: extensiones `postgis` y `pgcrypto`,
+  tablas `categorias` y `reportes` con `GEOGRAPHY(Point,4326)`, índices GIST
+  e índice parcial sobre activos, seed de 3 categorías v1, constraint de
+  severidad. Idempotente (`IF NOT EXISTS`).
+- `migrations/V002__purga_pg_cron.sql`: plantilla comentada para pg_cron.
+- `main.py`: `POST /api/reportes` (validación Pydantic, anti-duplicado 50 m,
+  409 si duplicado) y `GET /api/reportes` (bbox + filtro activos + LIMIT 500,
+  400 si bbox > 0.5°). Ofuscación espacial (grilla ~100 m) y timestamps
+  redondeados (5 min) en respuestas. HMAC rotado por ventana de 2 h para
+  `reporter_hash`. Sin `user_id`.
+- `docker-compose.yml`: servicio `db` (postgis/postgis:16-3.4) + servicio `api`.
+  El volumen de migraciones se monta en `initdb.d` para ejecución automática.
+- `Dockerfile`, `requirements.txt`, `.env.example`, `backend/README.md`.
+
+### Archivos creados
+- `backend/docker-compose.yml`, `backend/Dockerfile`, `backend/requirements.txt`
+- `backend/main.py`, `backend/.env.example`, `backend/README.md`
+- `backend/migrations/V001__schema_inicial.sql`
+- `backend/migrations/V002__purga_pg_cron.sql`
+
+### Pruebas realizadas
+- Revisión de coherencia SQL contra `DATA_MODEL.md` (columnas, tipos, índices, seed).
+- Validación de lógica Pydantic (rangos lat/lng, longitud descripción, vocabulario severidad).
+- Sin ejecución en contenedor (requiere Docker en el host del usuario).
+
+### Pendientes
+- Verificar `docker compose up --build` en el equipo local.
+- Conectar IP real del cliente en `POST /api/reportes` (placeholder `"0.0.0.0"`).
+- Activar `V002__purga_pg_cron.sql` cuando el host tenga `pg_cron`, o usar worker Python.
+- Rate-limiting por IP y por `reporter_hash` (tarea separada).
+
+### Siguiente paso recomendado
+Revisar el PR, levantar con `docker compose up --build` y probar los endpoints con `curl`.
+Luego continuar con rate-limiting (`feature/backend-post`) y ofuscación avanzada
+(`feature/backend-get`).
+
+---
+
 ## 2026-06-01 — Gemini CLI · Marcador de usuario dinámico (UX/Geolocation)
 
 ### Cambios realizados

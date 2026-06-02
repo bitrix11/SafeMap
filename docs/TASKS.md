@@ -29,13 +29,17 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
 - [ ] Probar en iOS Safari y Android Chrome físicos. — 👤 tú + Antigravity (QA)
 
 ## Backend
-- [ ] Implementar esquema PostgreSQL + PostGIS (ver `DATA_MODEL.md`).
+- [x] Implementar esquema PostgreSQL + PostGIS (ver `DATA_MODEL.md`).
       — 👤 Claude Code · 🌿 `feature/backend-schema`
-- [ ] `POST /api/reportes` con validación y anti-duplicado.
-      — 👤 Claude Code · 🌿 `feature/backend-post` · 🔗 backend-schema
-- [ ] `GET /api/reportes` por bbox + ofuscación espacial.
-      — 👤 Claude Code · 🌿 `feature/backend-get` · 🔗 backend-schema
-- [ ] Caducidad: filtro lógico + purga `pg_cron`. — 👤 Claude Code · 🔗 backend-schema
+- [x] `POST /api/reportes` con validación y anti-duplicado.
+      — 👤 Claude Code · 🌿 `feature/backend-schema` (incluido en este PR)
+- [x] `GET /api/reportes` por bbox + ofuscación espacial.
+      — 👤 Claude Code · 🌿 `feature/backend-schema` (incluido en este PR)
+- [x] Caducidad: filtro lógico (expira_en > now() en GET). — 👤 Claude Code
+- [ ] Caducidad física: activar purga `pg_cron` (V002). — 👤 Claude Code · 🔗 backend-schema
+- [ ] Rate-limiting por IP y por `reporter_hash`. — 👤 Claude Code · 🔗 backend-schema
+- [ ] Extraer IP real del cliente en POST (X-Forwarded-For / proxy). — 👤 Claude Code
+- [ ] Tests automáticos del backend (pytest + httpx). — 👤 Claude Code
 - [ ] WebSocket `/ws/reportes` para tiempo real (futuro). — 👤 Claude Code
 
 ## Pruebas
