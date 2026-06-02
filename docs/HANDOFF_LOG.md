@@ -4,6 +4,30 @@
 > primero) con: fecha, agente, cambios, archivos, pruebas, pendientes y
 > siguiente paso.
 
+## 2026-06-02 - Codex - Clustering de reportes (Leaflet.markercluster)
+
+### Cambios realizados
+- Se integro Leaflet.markercluster desde CDN en `index.html`.
+- `map.js` ahora usa `L.markerClusterGroup` como capa de reportes, con carga por chunks, limpieza por redibujado y recalculo automatico al crear/expirar reportes o cambiar filtros.
+- Los clusters muestran un indicador numerico y toman el color de la categoria dominante dentro del grupo.
+- Se mantiene fallback a `L.layerGroup` si el plugin no carga, sin cambiar el formato de `localStorage`.
+
+### Archivos modificados
+- `index.html`, `map.js`, `styles.css`, `docs/HANDOFF_LOG.md`, `docs/TASKS.md`
+
+### Pruebas realizadas
+- `node --check map.js`
+- `node --check ui.js`
+- Test funcional en Node con stubs de Leaflet: valida creacion de `markerClusterGroup`, redibujado, limpieza de capa y recalculo con filtro por categoria.
+- Servidor local en `http://127.0.0.1:4173` respondio 200 para `index.html`.
+
+### Pendientes
+- Verificacion visual en navegador integrado no realizada: el runtime del navegador cayo por sandbox de Windows antes de abrir la pestana.
+- Mantener pendiente la prueba en iOS Safari y Android Chrome fisicos ya listada en `TASKS.md`.
+
+### Siguiente paso recomendado
+Revisar el PR contra `DECISIONS.md` y probar visualmente clusters/filtros en navegador antes de mergear a `main`.
+
 ---
 
 ## 2026-06-01 — Gemini CLI · Marcador de usuario dinámico (UX/Geolocation)
