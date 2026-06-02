@@ -6,6 +6,33 @@
 
 ---
 
+## 2026-06-01 — Cierre de sesión · SafeMap MVP completo
+
+### Estado final
+SafeMap está funcional de punta a punta y versionado en `bitrix11/SafeMap` (main).
+
+- **Frontend** (Codex + Gemini + base de Cowork): mapa oscuro CartoDB, geoloc con
+  marcador dinámico interpolado, reporte de un toque, filtros por categoría con
+  persistencia, clustering (Leaflet.markercluster), bottom sheet deslizable.
+- **Backend** (Claude Code): FastAPI + PostGIS en Docker; POST con validación y
+  anti-duplicado, GET por bbox, ofuscación espacial, caducidad 2h, CORS, healthz.
+- **Integración**: `reports.js` usa el API con fallback a localStorage.
+- **QA** (Antigravity): `docs/QA_PLAN.md` + `backend/test_api.py` (7 pruebas, OK).
+  Encontró el bug de ofuscación de longitud.
+- **Fix** (Claude Code): bug de `_snap_to_grid` corregido y verificado; en main.
+
+### Pendientes (mejoras hacia producción, no urgentes) — ver TASKS.md
+Rate-limiting, IP real del cliente en POST, purga física pg_cron (V002),
+restringir CORS allow_origins, WebSocket de tiempo real.
+
+### Aprendizaje de proceso
+El cruce de archivos Windows↔entorno de Cowork puede mostrar archivos truncados
+en la lectura aunque en disco estén completos. La verdad es `git` y la
+verificación local (`node --check` / `python -c ast.parse`) en PowerShell.
+Regla: una IA termina → verificación local → commit inmediato.
+
+---
+
 ## 2026-06-01 — Claude Code · Fix bug ofuscación espacial (`fix/ofuscacion-longitud`)
 
 ### Problema
