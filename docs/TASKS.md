@@ -29,17 +29,31 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
 - [ ] Probar en iOS Safari y Android Chrome físicos. — 👤 tú + Antigravity (QA)
 
 ## Backend
-- [ ] Implementar esquema PostgreSQL + PostGIS (ver `DATA_MODEL.md`).
+- [x] Implementar esquema PostgreSQL + PostGIS (ver `DATA_MODEL.md`).
       — 👤 Claude Code · 🌿 `feature/backend-schema`
-- [ ] `POST /api/reportes` con validación y anti-duplicado.
-      — 👤 Claude Code · 🌿 `feature/backend-post` · 🔗 backend-schema
-- [ ] `GET /api/reportes` por bbox + ofuscación espacial.
-      — 👤 Claude Code · 🌿 `feature/backend-get` · 🔗 backend-schema
-- [ ] Caducidad: filtro lógico + purga `pg_cron`. — 👤 Claude Code · 🔗 backend-schema
+- [x] `POST /api/reportes` con validación y anti-duplicado.
+      — 👤 Claude Code · 🌿 `feature/backend-schema` (incluido en este PR)
+- [x] `GET /api/reportes` por bbox + ofuscación espacial.
+      — 👤 Claude Code · 🌿 `feature/backend-schema` (incluido en este PR)
+- [x] Caducidad: filtro lógico (expira_en > now() en GET). — 👤 Claude Code
+- [ ] **BUG (QA Antigravity):** `_snap_to_grid` en `main.py:~139` usa la propia
+      longitud en `math.cos()` al calcular la grilla de longitud; debe usar la
+      LATITUD. Pasar la latitud a la función para lng y ajustar el test
+      `test_06_ofuscacion_coordenadas` para validar el comportamiento correcto.
+      — 👤 Claude Code · 🌿 `fix/ofuscacion-longitud` · ver `QA_PLAN.md`
+- [ ] Caducidad física: activar purga `pg_cron` (V002). — 👤 Claude Code · 🔗 backend-schema
+- [ ] Rate-limiting por IP y por `reporter_hash`. — 👤 Claude Code · 🔗 backend-schema
+- [ ] Extraer IP real del cliente en POST (X-Forwarded-For / proxy). — 👤 Claude Code
+- [ ] Tests automáticos del backend (pytest + httpx). — 👤 Claude Code
 - [ ] WebSocket `/ws/reportes` para tiempo real (futuro). — 👤 Claude Code
 
-## Pruebas
-- [ ] Suite de QA / pruebas manuales documentadas.
+## Integración
+- [x] Conectar `reports.js` al API (`/api/reportes`) con fallback a localStorage;
+      `API_BASE` en `config.js`; CORS en backend. — Claude Code + Cowork
+- [ ] Restringir `allow_origins` de CORS para producción (hoy "*"). — 👤 Claude Code
+
+## Pruebas (al final, con todo conectado)
+- [x] Suite de QA / pruebas manuales documentadas.
       — 👤 Antigravity · 🌿 `feature/test-qa`
 
 ## Datos y privacidad

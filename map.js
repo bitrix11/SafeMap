@@ -1,6 +1,6 @@
 /* SafeMap — capa de mapa (Leaflet + CartoDB Dark).
    Inicializa el mapa, dibuja marcadores y aplica filtros de categoria.
-   feature/map-clustering reemplazará la capa de marcadores por clustering. */
+   redibujar() es async porque reports.listar() ahora puede consultar la API. */
 
 (function () {
   const { config } = window.SafeMap;
@@ -22,10 +22,12 @@
 
     L.control.zoom({ position: "bottomleft" }).addTo(map);
 
-    capaReportes = L.layerGroup().addTo(map);
+    capaReportes = _crearCapaReportes().addTo(map);
     redibujar();
 
     document.addEventListener("safemap:reportes-cambio", redibujar);
+    // Al mover/zoom el mapa, recargar reportes del bbox visible (API).
+    map.on("moveend", redibujar);
     return map;
   }
 
@@ -40,19 +42,65 @@
     });
   }
 
-  function redibujar() {
+  function _crearCapaReportes() {
+    if (!L.markerClusterGroup) {
+      console.warn("SafeMap: Leaflet.markercluster no esta disponible; usando marcadores simples.");
+      return L.layerGroup();
+    }
+    return L.markerClusterGroup({
+      chunkedLoading: true,
+      chunkInterval: 80,
+      chunkDelay: 30,
+      removeOutsideVisibleBounds: true,
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: true,
+      spiderfyOnMaxZoom: true,
+      maxClusterRadius: 48,
+      iconCreateFunction: _iconoCluster,
+    });
+  }
+
+  function _iconoCluster(cluster) {
+    const total = cluster.getChildCount();
+    const size = total >= 100 ? "grande" : total >= 10 ? "medio" : "chico";
+    const px = total >= 100 ? 54 : total >= 10 ? 48 : 44;
+    const categorias = {};
+
+    cluster.getAllChildMarkers().forEach((marker) => {
+      const codigo = marker.options.categoria;
+      categorias[codigo] = (categorias[codigo] || 0) + 1;
+    });
+
+    const dominante = Object.keys(categorias).sort((a, b) => categorias[b] - categorias[a])[0];
+    const meta = window.SafeMap.categoria(dominante);
+    const color = meta ? meta.color : "#2f81f7";
+
+    return L.divIcon({
+      className: "cluster-reporte cluster-reporte--" + size,
+      html:
+        '<div class="cluster-reporte__burbuja" style="--cluster-color:' + color + '">' +
+          '<span class="cluster-reporte__numero">' + total + "</span>" +
+        "</div>",
+      iconSize: [px, px],
+      iconAnchor: [px / 2, px / 2],
+    });
+  }
+
+  async function redibujar() {
     if (!capaReportes) return;
-    capaReportes.clearLayers();
 
     const visibles = new Set(categoriasVisibles);
-    const reportes = window.SafeMap.reports
-      .listar()
-      .filter((r) => visibles.has(r.categoria));
+    const todos = await window.SafeMap.reports.listar();
+    const reportes = todos.filter((r) => visibles.has(r.categoria));
 
+    capaReportes.clearLayers();
     reportes.forEach((r) => {
       const meta = window.SafeMap.categoria(r.categoria);
       if (!meta) return;
-      L.marker([r.lat, r.lng], { icon: _iconoCategoria(meta) })
+      L.marker([r.lat, r.lng], {
+        icon: _iconoCategoria(meta),
+        categoria: r.categoria,
+      })
         .bindPopup(
           "<strong>" + meta.label + "</strong>" +
           (r.descripcion ? "<br>" + r.descripcion : "")
@@ -80,7 +128,6 @@
     return [...categoriasVisibles];
   }
 
-  // API pública
   window.SafeMap.map = {
     init,
     redibujar,

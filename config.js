@@ -5,6 +5,9 @@
 window.SafeMap = window.SafeMap || {};
 
 window.SafeMap.config = {
+  // URL base del backend. Vacío = solo localStorage (offline/dev sin backend).
+  API_BASE: "http://localhost:8000",
+
   // Caducidad de reportes: 2 horas (ver DECISIONS.md)
   TTL_MS: 2 * 60 * 60 * 1000,
 

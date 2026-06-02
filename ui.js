@@ -1,6 +1,7 @@
 /* SafeMap — interacciones de interfaz.
    Bottom sheet deslizable, filtros de categoría, lista de reportes, modal de
-   categoría y flujo de "reporte de un toque". */
+   categoría y flujo de "reporte de un toque". _renderLista() es async porque
+   reports.listar() ahora puede consultar la API. */
 
 (function () {
   const { config } = window.SafeMap;
@@ -41,7 +42,7 @@
       currentState = state;
       panel.dataset.state = state;
       panel.style.transition = animate ? "" : "none";
-      panel.style.transform = ""; // el CSS aplica vía data-state
+      panel.style.transform = "";
     }
 
     handle.addEventListener("touchstart", (e) => {
@@ -111,7 +112,6 @@
       setPanelState(targetState);
     });
 
-    // Toque en el handle alterna peek/half (accesible sin gesto)
     handle.addEventListener("click", () => {
       setPanelState(currentState === states.PEEK ? states.HALF : states.PEEK);
     });
@@ -195,13 +195,13 @@
   }
 
   /* ---- Lista de reportes en el panel ---- */
-  function _renderLista() {
+  async function _renderLista() {
     const ul = document.getElementById("lista-reportes");
     const contador = document.getElementById("panel-contador");
     const visibles = new Set(window.SafeMap.map.getCategoriasVisibles());
 
-    const reportes = window.SafeMap.reports
-      .listar()
+    const todos = await window.SafeMap.reports.listar();
+    const reportes = todos
       .filter((r) => visibles.has(r.categoria))
       .sort((a, b) => new Date(b.creado_en) - new Date(a.creado_en));
 
@@ -251,8 +251,8 @@
       b.className = "modal__opcion";
       b.innerHTML =
         '<span class="punto" style="background:' + cat.color + '"></span>' + cat.label;
-      b.addEventListener("click", () => {
-        _crearEnUbicacion(cat.codigo);
+      b.addEventListener("click", async () => {
+        await _crearEnUbicacion(cat.codigo);
         modal.hidden = true;
       });
       opciones.appendChild(b);
@@ -263,7 +263,7 @@
     modal.addEventListener("click", (e) => { if (e.target === modal) modal.hidden = true; });
   }
 
-  function _crearEnUbicacion(codigo) {
+  async function _crearEnUbicacion(codigo) {
     const pos = window.SafeMap.geolocation.getPosicion();
     let lat, lng;
     if (pos) { lat = pos.lat; lng = pos.lng; }
@@ -272,7 +272,7 @@
       if (!c) return;
       lat = c.lat; lng = c.lng;
     }
-    window.SafeMap.reports.crear(codigo, lat, lng);
+    await window.SafeMap.reports.crear(codigo, lat, lng);
     window.SafeMap.map.setVista(lat, lng, 17);
   }
 
