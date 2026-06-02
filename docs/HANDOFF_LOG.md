@@ -6,6 +6,73 @@
 
 ---
 
+## 2026-06-01 — Claude Code · Conexión frontend ↔ backend (feature/backend-schema)
+
+### Cambios realizados
+- **`config.js`**: añadido `API_BASE: "http://localhost:8000"`. Si se deja vacío
+  (`""`), la app opera exclusivamente con localStorage (modo offline/sin backend).
+- **`reports.js`**: refactorizada la capa de datos a async con doble fallback:
+  - `listar()`: hace `GET /api/reportes?min_lat=…&min_lng=…&max_lat=…&max_lng=…`
+    usando el bbox del mapa visible (`map.getBounds()`). Si la API no responde o
+    API_BASE está vacío, devuelve los reportes vigentes de localStorage.
+  - `crear()`: hace `POST /api/reportes`; si la respuesta es 409 devuelve `null`
+    (duplicado detectado por el servidor); si falla por red o cualquier otro
+    error, guarda en localStorage como antes. En ambos casos despacha
+    `"safemap:reportes-cambio"`.
+  - `eliminar()` sigue siendo síncrono (solo localStorage; sin cambio funcional).
+  - Se extrajo `_listarLocal()` para separar la lógica de fallback de la lógica
+    de API, evitando llamadas recursivas.
+- **`map.js`**: `redibujar()` se convierte en `async function`; llama
+  `await reports.listar()` antes de redibujar marcadores. El filtro por
+  categorías visibles se aplica después (igual que antes).
+- **`ui.js`**: `_renderLista()` y `_crearEnUbicacion()` pasan a `async`. Los
+  event listeners que las invocan no necesitan `await` (fire-and-forget; el
+  evento `"safemap:reportes-cambio"` sincroniza mapa y lista cuando la promesa
+  resuelve).
+
+### Archivos modificados
+- `config.js`, `reports.js`, `map.js`, `ui.js`, `docs/HANDOFF_LOG.md`
+
+### Pruebas recomendadas
+
+**Con docker compose up:**
+```bash
+cd backend && docker compose up --build
+```
+Luego abrir el frontend en un servidor HTTP local (no `file://`) y:
+
+1. **API activa**: crear un reporte → debe aparecer en la BD (verificar con
+   `curl http://localhost:8000/api/reportes?min_lat=19.4&min_lng=-99.2&max_lat=19.5&max_lng=-99.1`).
+2. **Fallback**: detener el backend (`docker compose stop api`) → la app debe
+   seguir funcionando con localStorage sin errores visibles.
+3. **Filtros**: activar/desactivar categorías → los marcadores y la lista deben
+   respetarlos igual que antes.
+4. **Anti-duplicado**: crear el mismo tipo de reporte desde la misma posición →
+   el servidor devuelve 409; no debe aparecer duplicado ni bloquearse la UI.
+
+### Pendientes
+- **CORS**: el backend (`main.py`) no tiene `CORSMiddleware`. Si el frontend se
+  sirve desde un origen diferente a `localhost:8000`, el navegador bloqueará
+  las peticiones. Añadir:
+  ```python
+  from fastapi.middleware.cors import CORSMiddleware
+  app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+  ```
+  (restringir `allow_origins` a producción cuando se despliegue).
+- **Bbox grande**: si el usuario hace zoom-out más allá de 0.5°, el backend
+  devuelve 400; `listar()` cae a localStorage. Mostrar aviso al usuario es
+  mejora futura.
+- **Cache**: `listar()` hace dos llamadas API por cada re-render (mapa + lista).
+  Un caché en memoria de ~1 s evitaría duplicarlas sin complicar la lógica.
+- Rate-limiting e IP real en `POST /api/reportes` (pendiente de iteración backend).
+
+### Siguiente paso recomendado
+1. Añadir CORS al backend (una línea) y verificar con el frontend en desarrollo.
+2. Considerar servir el frontend estático directamente desde FastAPI para
+   eliminar el problema de CORS en local.
+
+---
+
 ## 2026-06-01 — Claude Code · Backend: esquema PostgreSQL/PostGIS + endpoints
 
 ### Cambios realizados
