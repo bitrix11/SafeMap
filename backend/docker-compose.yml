@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: safemap_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: safemap
+      POSTGRES_USER: safemap
+      POSTGRES_PASSWORD: safemap_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U safemap -d safemap"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: safemap_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://safemap:safemap_dev@db:5432/safemap
+      REPORTER_HMAC_SECRET: change_me_in_production
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

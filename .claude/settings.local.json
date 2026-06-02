@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree *)",
+      "Bash(docker compose *)",
+      "Bash(curl -sf http://localhost:8000/healthz)",
+      "Bash(break)",
+      "Bash(python *)"
+    ]
+  }
+}

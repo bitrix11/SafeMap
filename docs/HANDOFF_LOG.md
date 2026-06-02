@@ -6,6 +6,55 @@
 
 ---
 
+## 2026-06-01 — Claude Code · Fix bug ofuscación espacial (`fix/ofuscacion-longitud`)
+
+### Problema
+`_snap_to_grid` en `backend/main.py` calculaba la grilla de longitud usando
+`math.cos(math.radians(coord))` donde `coord` era la propia **longitud** del
+punto. El tamaño angular de un metro en longitud depende del **coseno de la
+latitud**, no de la longitud, por lo que la grilla resultaba incorrecta en casi
+cualquier punto que no estuviera cerca del meridiano cero.
+
+El test `test_06_ofuscacion_coordenadas` en `test_api.py` replicaba el mismo
+error en su cálculo de `expected_lng`, con lo que el test pasaba a pesar del
+bug (validaba el comportamiento incorrecto).
+
+### Cambios realizados
+- **`backend/main.py`**: añadido parámetro `lat: float = 0.0` a
+  `_snap_to_grid`; cuando `is_lat=False`, se usa `math.cos(math.radians(lat))`
+  en lugar de `math.cos(math.radians(coord))`.
+- **`backend/main.py`**: en `_obfuscate`, la llamada para la longitud pasa
+  `lat=lat_raw` explícitamente.
+- **`backend/test_api.py`**: `test_06_ofuscacion_coordenadas` corregido para
+  calcular `deg_per_m_lng` con `math.cos(math.radians(lat_exacta))`, validando
+  el comportamiento correcto en lugar del bug.
+- Los demás archivos del backend (`docker-compose.yml`, `Dockerfile`,
+  `requirements.txt`, `migrations/`) fueron incorporados a la rama
+  `fix/ofuscacion-longitud` desde `feature/backend-schema` (estaban ausentes
+  del worktree de esta rama).
+
+### Archivos modificados
+- `backend/main.py`
+- `backend/test_api.py`
+- `docs/TASKS.md` (bug marcado `[x]`)
+- `docs/HANDOFF_LOG.md` (esta entrada)
+
+### Pruebas realizadas
+- `docker compose up --build` en `backend/` levanta DB + API sin errores.
+- `python -m unittest test_api -v` contra `http://localhost:8000`: **7/7 OK**
+  incluyendo `test_06_ofuscacion_coordenadas` que ahora valida la grilla
+  correcta (cos de la latitud).
+
+### Pendientes
+- Ninguno nuevo derivado de este fix.
+
+### Siguiente paso recomendado
+Abrir PR `fix/ofuscacion-longitud → main`, hacer merge tras revisión de Claude
+Code (como integrador), y luego mergear `feature/backend-schema` si aún no
+está en main.
+
+---
+
 ## 2026-06-01 — Gemini CLI · Marcador de usuario dinámico (UX/Geolocation)
 
 ### Cambios realizados
