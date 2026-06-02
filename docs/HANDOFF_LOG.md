@@ -6,6 +6,38 @@
 
 ---
 
+## 2026-06-01 — Claude Code · Comentario opcional en reporte (`feature/comentario-reporte`)
+
+### Cambios realizados
+Modal de "+ Reportar" convertido a flujo de dos pasos:
+1. El usuario elige categoría (se resalta con `aria-pressed="true"`).
+2. Aparece un `<textarea>` (máx 280 chars) con contador en tiempo real y botón "Confirmar reporte".
+3. El texto se pasa a `window.SafeMap.reports.crear(categoria, lat, lng, descripcion)`.
+4. La descripción se muestra en el popup del marcador (Leaflet) y en la fila del bottom sheet (`.reporte__desc`).
+
+En ambos puntos de renderizado se aplica escape HTML (`_esc()`) para prevenir XSS.
+
+### Archivos modificados
+- `index.html` — textarea + contador + botón confirmar dentro del modal
+- `ui.js` — flujo de dos pasos, `_esc()`, `_renderLista()` muestra descripción
+- `map.js` — `_esc()` en popup del marcador
+- `styles.css` — `.modal__opcion[aria-pressed]`, `.modal__desc-wrap`, `.modal__desc`, `.modal__desc-chars`, `.modal__confirmar`, `.reporte__desc`
+
+### Pruebas realizadas
+- `node --check` en `ui.js`, `map.js`, `reports.js` → sin errores de sintaxis.
+- Flujo manual: abrir modal → elegir categoría → textarea aparece → escribir → confirmar → marcador en mapa con popup mostrando descripción → fila en bottom sheet con descripción truncada.
+- Cancelar y clic fuera del modal reinician el estado correctamente.
+- Sin descripción: flujo idéntico al anterior (descripcion = ""), sin cambios visibles en popup ni lista.
+
+### Riesgos / pendientes
+- La textarea no tiene validación de contenido (solo límite de longitud), conforme al backend.
+- En iOS Safari el `focus()` sobre la textarea puede desplazar la vista; aceptable en el MVP.
+
+### Siguiente paso recomendado
+Abrir PR `feature/comentario-reporte → main`, revisar con `/code-review` y hacer merge.
+
+---
+
 ## 2026-06-01 — Cierre de sesión · SafeMap MVP completo
 
 ### Estado final

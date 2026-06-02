@@ -40,6 +40,14 @@
     });
   }
 
+  function _esc(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
   function redibujar() {
     if (!capaReportes) return;
     capaReportes.clearLayers();
@@ -55,7 +63,7 @@
       L.marker([r.lat, r.lng], { icon: _iconoCategoria(meta) })
         .bindPopup(
           "<strong>" + meta.label + "</strong>" +
-          (r.descripcion ? "<br>" + r.descripcion : "")
+          (r.descripcion ? "<br>" + _esc(r.descripcion) : "")
         )
         .addTo(capaReportes);
     });

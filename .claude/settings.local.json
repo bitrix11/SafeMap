@@ -5,7 +5,10 @@
       "Bash(docker compose *)",
       "Bash(curl -sf http://localhost:8000/healthz)",
       "Bash(break)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(node --check \"C:\\\\Users\\\\bitog\\\\Documents\\\\Claude\\\\Projects\\\\SafeMap\\\\ui.js\")",
+      "Bash(node --check \"C:\\\\Users\\\\bitog\\\\Documents\\\\Claude\\\\Projects\\\\SafeMap\\\\map.js\")",
+      "Bash(node --check \"C:\\\\Users\\\\bitog\\\\Documents\\\\Claude\\\\Projects\\\\SafeMap\\\\reports.js\")"
     ]
   }
 }

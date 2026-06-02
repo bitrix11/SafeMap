@@ -46,6 +46,13 @@
     <div class="modal__contenido" role="dialog" aria-modal="true" aria-label="Elegir categoría">
       <h2 class="modal__titulo">¿Qué quieres reportar?</h2>
       <div id="modal-opciones" class="modal__opciones"></div>
+      <div id="modal-desc-wrap" class="modal__desc-wrap" hidden>
+        <textarea id="modal-desc" class="modal__desc" maxlength="280"
+                  placeholder="Describe lo que ves (opcional)..."
+                  rows="3" aria-label="Descripción del reporte"></textarea>
+        <div class="modal__desc-chars"><span id="modal-desc-contador">0</span>/280</div>
+        <button id="modal-confirmar" class="modal__confirmar">Confirmar reporte</button>
+      </div>
       <button id="modal-cancelar" class="modal__cancelar">Cancelar</button>
     </div>
   </div>

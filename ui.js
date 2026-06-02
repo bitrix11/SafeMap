@@ -224,11 +224,20 @@
         '<span class="reporte__punto" style="background:' + (meta ? meta.color : "#888") + '"></span>' +
         '<div class="reporte__info">' +
           '<div class="reporte__cat">' + (meta ? meta.label : r.categoria) + "</div>" +
+          (r.descripcion ? '<div class="reporte__desc">' + _esc(r.descripcion) + "</div>" : "") +
           '<div class="reporte__meta">' + _tiempoRestante(r.expira_en) + "</div>" +
         "</div>";
       li.addEventListener("click", () => window.SafeMap.map.setVista(r.lat, r.lng, 17));
       ul.appendChild(li);
     });
+  }
+
+  function _esc(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   function _tiempoRestante(expira) {
@@ -244,26 +253,61 @@
     const modal = document.getElementById("modal-categoria");
     const opciones = document.getElementById("modal-opciones");
     const cancelar = document.getElementById("modal-cancelar");
+    const descWrap = document.getElementById("modal-desc-wrap");
+    const descTA = document.getElementById("modal-desc");
+    const descContador = document.getElementById("modal-desc-contador");
+    const confirmar = document.getElementById("modal-confirmar");
+
+    let codigoSeleccionado = null;
+
+    function resetModal() {
+      codigoSeleccionado = null;
+      descWrap.hidden = true;
+      descTA.value = "";
+      descContador.textContent = "0";
+      opciones.querySelectorAll(".modal__opcion").forEach((b) =>
+        b.setAttribute("aria-pressed", "false")
+      );
+    }
 
     opciones.innerHTML = "";
     config.CATEGORIAS.forEach((cat) => {
       const b = document.createElement("button");
       b.className = "modal__opcion";
+      b.setAttribute("aria-pressed", "false");
       b.innerHTML =
         '<span class="punto" style="background:' + cat.color + '"></span>' + cat.label;
       b.addEventListener("click", () => {
-        _crearEnUbicacion(cat.codigo);
-        modal.hidden = true;
+        codigoSeleccionado = cat.codigo;
+        opciones.querySelectorAll(".modal__opcion").forEach((ob) =>
+          ob.setAttribute("aria-pressed", "false")
+        );
+        b.setAttribute("aria-pressed", "true");
+        descWrap.hidden = false;
+        descTA.focus();
       });
       opciones.appendChild(b);
     });
 
-    btn.addEventListener("click", () => { modal.hidden = false; });
-    cancelar.addEventListener("click", () => { modal.hidden = true; });
-    modal.addEventListener("click", (e) => { if (e.target === modal) modal.hidden = true; });
+    descTA.addEventListener("input", () => {
+      descContador.textContent = String(descTA.value.length);
+    });
+
+    confirmar.addEventListener("click", () => {
+      if (!codigoSeleccionado) return;
+      _crearEnUbicacion(codigoSeleccionado, descTA.value.trim());
+      modal.hidden = true;
+      resetModal();
+    });
+
+    btn.addEventListener("click", () => { resetModal(); modal.hidden = false; });
+    cancelar.addEventListener("click", () => { modal.hidden = true; resetModal(); });
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) { modal.hidden = true; resetModal(); }
+    });
   }
 
-  function _crearEnUbicacion(codigo) {
+  function _crearEnUbicacion(codigo, descripcion) {
     const pos = window.SafeMap.geolocation.getPosicion();
     let lat, lng;
     if (pos) { lat = pos.lat; lng = pos.lng; }
@@ -272,7 +316,7 @@
       if (!c) return;
       lat = c.lat; lng = c.lng;
     }
-    window.SafeMap.reports.crear(codigo, lat, lng);
+    window.SafeMap.reports.crear(codigo, lat, lng, descripcion);
     window.SafeMap.map.setVista(lat, lng, 17);
   }
 
