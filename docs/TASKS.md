@@ -22,7 +22,7 @@ Formato: `[estado] descripción — 👤 Dueño · 🌿 rama · 🔗 depende de`
       — 👤 Gemini · 🌿 `feature/geolocation-marker` · 🔗 refactor-modular
 - [ ] Filtros superiores por categoría, con estado persistente.
       — 👤 Codex · 🌿 `feature/report-filters` · 🔗 refactor-modular
-- [ ] Clustering con Leaflet.markercluster.
+- [x] Clustering con Leaflet.markercluster.
       — 👤 Codex · 🌿 `feature/map-clustering` · 🔗 refactor-modular
 - [x] Bottom sheet deslizable con safe areas iOS.
       — 👤 Gemini · 🌿 `feature/ui-bottom-sheet` · 🔗 refactor-modular
