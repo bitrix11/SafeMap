@@ -12,6 +12,7 @@ from uuid import UUID
 
 import asyncpg
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 
 # ─── Config ──────────────────────────────────────────────────────────────────
@@ -39,6 +40,16 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="SafeMap API", version="0.1.0", lifespan=lifespan)
+
+# CORS: permitir que el frontend (otro puerto/origen) llame al API.
+# En dev abrimos todo; en producción restringir a los orígenes reales.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ─── Schemas ─────────────────────────────────────────────────────────────────
