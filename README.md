@@ -1,9 +1,9 @@
 # SafeMap
-
+ESTE PROYECTO FUE HECHO EN UN HACKATON TIENE CIERTOS BUGS
 App web móvil de alertas de seguridad urbana y comunitaria en tiempo real.
 Un mapa interactivo donde los usuarios generan "reportes de un solo toque"
 sobre situaciones de riesgo en su ubicación (zonas oscuras, robos/incidentes,
-actividad sospechosa).
+actividad sospechosa). 
 
 ## Estructura del repo
 
